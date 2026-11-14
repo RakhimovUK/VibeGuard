@@ -1,0 +1,35 @@
+{
+  "note": "Ataylab qo'yilgan xatolar. detector=script: skriptlar topishi kerak. detector=agent: hujumchi agentlar topishi kerak.",
+  "planted": [
+    {"id": "B01", "detector": "script", "type": "telegram_bot_token", "file": "vuln-bot/bot.py", "rule": "secrets-in-repo"},
+    {"id": "B02", "detector": "script", "type": "ai_api_key", "file": "vuln-bot/bot.py", "rule": "secrets-in-repo"},
+    {"id": "B03", "detector": "script", "type": "unpinned_dependency", "file": "vuln-bot/requirements.txt", "rule": "attacker-supply"},
+    {"id": "B04", "detector": "agent", "file": "vuln-bot/bot.py", "rule": "privacy-logs-pii"},
+    {"id": "B05", "detector": "agent", "file": "vuln-bot/bot.py", "rule": "webapp-sql-injection"},
+    {"id": "B06", "detector": "agent", "file": "vuln-bot/bot.py", "rule": "attacker-insider (admin tekshiruvi yo'q)"},
+    {"id": "B07", "detector": "agent", "file": "vuln-bot/bot.py", "rule": "payments-idempotency"},
+    {"id": "B08", "detector": "agent", "file": "vuln-bot/bot.py", "rule": "bugs-race-condition"},
+    {"id": "B09", "detector": "agent", "file": "vuln-bot/bot.py", "rule": "bugs-unhandled-errors"},
+    {"id": "B10", "detector": "agent", "file": "vuln-bot/bot.py", "rule": "cost-no-rate-limit"},
+    {"id": "B11", "detector": "agent", "file": "vuln-bot/bot.py", "rule": "ai-prompt-injection"},
+
+    {"id": "W01", "detector": "script", "type": "db_url_with_password", "file": "vuln-webapp/.env", "rule": "secrets-in-repo"},
+    {"id": "W02", "detector": "script", "type": "env_file_present", "file": "vuln-webapp/.env", "rule": "secrets-in-repo"},
+    {"id": "W03", "detector": "script", "type": "no_lockfile", "file": "vuln-webapp/package.json", "rule": "attacker-supply"},
+    {"id": "W04", "detector": "script", "type": "unpinned_dependency", "file": "vuln-webapp/package.json", "rule": "attacker-supply"},
+    {"id": "W05", "detector": "script", "type": "docker_root_user", "file": "vuln-webapp/Dockerfile", "rule": "deploy-docker-secrets"},
+    {"id": "W06", "detector": "script", "type": "docker_secret_in_image", "file": "vuln-webapp/Dockerfile", "rule": "deploy-docker-secrets"},
+    {"id": "W07", "detector": "script", "type": "docker_unpinned_base", "file": "vuln-webapp/Dockerfile", "rule": "deploy-docker-secrets"},
+    {"id": "W08", "detector": "script", "type": "no_dockerignore", "file": "vuln-webapp/Dockerfile", "rule": "deploy-docker-secrets"},
+    {"id": "W09", "detector": "script", "type": "no_gitignore", "file": ".gitignore", "rule": "secrets-in-repo"},
+    {"id": "W10", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "bot-initdata"},
+    {"id": "W11", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "privacy-overexposed-fields"},
+    {"id": "W12", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "webapp-idor"},
+    {"id": "W13", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "webapp-sql-injection"},
+    {"id": "W14", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "webapp-client-trust"},
+    {"id": "W15", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "site-open-redirect"},
+    {"id": "W16", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "deploy-debug-prod"},
+    {"id": "W17", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "bot-webhook-secret"},
+    {"id": "W18", "detector": "agent", "file": "vuln-webapp/server.js", "rule": "cost-unbounded-input"}
+  ]
+}

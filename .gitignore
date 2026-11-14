@@ -1,0 +1,8 @@
+.vibeguard/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+# Sinov loyihalaridagi soxta sirlar ataylab repoda turadi
+!fixtures/**/.env

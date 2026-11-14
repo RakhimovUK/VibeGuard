@@ -1,0 +1,30 @@
+# O'z loyihangiz uchun: bu faylni loyihangizdagi .github/workflows/vibeguard.yml ga nusxalang
+# va RakhimovUK o'rniga VibeGuard reposi egasini yozing.
+#
+# Har bir PR'da tezkor tekshiruv (AI'siz): sir topilsa tekshiruv yiqiladi,
+# natija PR'ning "Summary" bo'limida ko'rinadi va PR'ga izoh sifatida yoziladi.
+name: vibeguard
+on:
+  pull_request:
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  vibeguard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: RakhimovUK/vibeguard
+          path: .vibeguard-tool
+      - name: VibeGuard tezkor tekshiruv
+        id: check
+        run: |
+          python3 .vibeguard-tool/skills/vibeguard/scripts/ci_check.py . \
+            --exclude ".vibeguard-tool/*" > vibeguard-summary.md
+      - name: PR'ga izoh
+        if: always() && github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file vibeguard-summary.md

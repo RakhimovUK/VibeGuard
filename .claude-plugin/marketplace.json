@@ -1,0 +1,14 @@
+{
+  "name": "vibeguard",
+  "description": "VibeGuard: vibecoding loyihalari uchun xavfsizlik auditi va Red Team plagini.",
+  "owner": {
+    "name": "Raximov Ubaydullo"
+  },
+  "plugins": [
+    {
+      "name": "vibeguard",
+      "source": "./",
+      "description": "Xavfsizlik auditi va Red Team (hujumchi ko'zi bilan tekshiruv) vibecoding loyihalari uchun."
+    }
+  ]
+}

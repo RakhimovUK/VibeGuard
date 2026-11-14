@@ -1,0 +1,16 @@
+# VibeGuard'ning o'z reposi uchun: skriptlar sinov loyihalarida to'g'ri ishlashini tekshiradi.
+name: selftest
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skriptlar sinovi
+        run: python3 skills/vibeguard/scripts/selftest.py
+      - name: O'z kodida sir yo'qligi (sinov loyihalaridan tashqari)
+        run: python3 skills/vibeguard/scripts/ci_check.py . --exclude "fixtures/*"

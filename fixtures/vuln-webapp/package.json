@@ -1,0 +1,9 @@
+{
+  "name": "vuln-webapp",
+  "private": true,
+  "description": "ATAYLAB XATO BILAN YOZILGAN SINOV LOYIHASI",
+  "dependencies": {
+    "express": "*",
+    "cors": "latest"
+  }
+}

@@ -1,0 +1,6 @@
+# ATAYLAB XATO BILAN YOZILGAN SINOV FAYLI
+FROM node:latest
+ENV WEBHOOK_SECRET=FAKEFAKEFAKE1234
+COPY . .
+RUN npm install
+CMD ["node", "server.js"]
