@@ -1,6 +1,6 @@
 {
   "name": "vibeguard",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Vibecoding loyihalarini (Telegram bot, web-app, sayt, APK) xavfsizlik va xatolarga tekshiradi. Red Team rejimida hujumchi ko'zi bilan hujum qilib, zaif joylarni topadi va tuzatish yo'lini ko'rsatadi.",
   "author": { "name": "Raximov Ubaydullo" },
   "license": "MIT",

@@ -1,6 +1,6 @@
 ---
 description: Red Team rejimi. Hujumchi ko'zi bilan loyihani tekshiradi, zaif joylarni va tuzatish yo'lini ko'rsatadi.
-argument-hint: "[yo'l yoki qism: bot | webapp | site | apk | payments]"
+argument-hint: "[yo'l yoki qism: bot | webapp | site | apk | payments] [--hammasi]"
 ---
 
 `vibeguard` skillini yukla va Red Team rejimini ishga tushir. Maqsad: $ARGUMENTS (bo'sh bo'lsa butun loyiha).
@@ -13,20 +13,31 @@ Qadamlar:
    - `python3 "${CLAUDE_PLUGIN_ROOT}/skills/vibeguard/scripts/scan_secrets.py" <papka>`
    - `python3 "${CLAUDE_PLUGIN_ROOT}/skills/vibeguard/scripts/check_hygiene.py" <papka>`
    Python yo'q bo'lsa bu qadamni o'tkazib yubor va hisobotda ayt. gitleaks, semgrep, npm audit, pip-audit o'rnatilgan bo'lsa ularni ham ishlat (faqat o'qish rejimida).
-4. Recon natijasiga qarab tegishli hujumchi agentlarni **bir vaqtda** ishga tushir. Har bir agentga `${CLAUDE_PLUGIN_ROOT}/skills/vibeguard/rules/` ichidan `agent:` maydoni uning nomiga teng bo'lgan qoida fayllarini o'qishni ayt:
-   - `attacker-outsider` (har doim)
-   - `attacker-user` (login yoki foydalanuvchi ma'lumoti bor bo'lsa)
-   - `attacker-token` (token, kalit, `.env`, bot tokeni bor bo'lsa)
-   - `attacker-fraudster` (to'lov, Stars, balans, promo, referal bor bo'lsa)
-   - `attacker-cost` (pullik API, hosting, AI chaqiruvlari bor bo'lsa)
-   - `attacker-supply` (har doim: bog'liqliklar va CI)
-   - `attacker-deploy` (Docker, Railway, Supabase/Firebase, baza sozlamalari bor bo'lsa)
-   - `attacker-takeover` (login, parol, OTP yoki sessiya bor bo'lsa)
-   - `attacker-insider` (admin panel yoki admin buyruqlari bor bo'lsa)
-   - `attacker-scraper` (foydalanuvchi ma'lumoti saqlansa)
-   - `attacker-phisher` (bot, redirect, deep link yoki webhook bor bo'lsa)
-   - `attacker-apk` (Android ilova bor bo'lsa)
-   - `attacker-ai` (AI funksiyasi bor bo'lsa)
+4. **Hujumchilarni tanla va navbat bilan ishlat** (hammasini bir vaqtda EMAS: ulanish uzilishi va limitga urilish xavfi bor).
+   a. Recon natijasiga qarab mos hujumchilarni tanla. Argumentda `--hammasi` bo'lsa, hammasini tanla. Mos kelmaganlarini "o'tkazib yuborildi: sababi" deb hisobotga yoz:
+      - `attacker-outsider` (har doim)
+      - `attacker-supply` (har doim: bog'liqliklar va CI)
+      - `attacker-user` (login yoki foydalanuvchi ma'lumoti bor bo'lsa)
+      - `attacker-token` (token, kalit, `.env`, bot tokeni bor bo'lsa)
+      - `attacker-takeover` (kalit, sessiya, initData, oila/ulashish kodi yoki hisobga kirish bo'lsa)
+      - `attacker-fraudster` (to'lov, Stars, balans, promo, referal bor bo'lsa)
+      - `attacker-cost` (pullik API, hosting, AI chaqiruvlari bor bo'lsa)
+      - `attacker-deploy` (Docker, Railway, Supabase/Firebase, baza sozlamalari bor bo'lsa)
+      - `attacker-insider` (admin panel yoki admin buyruqlari bor bo'lsa)
+      - `attacker-scraper` (foydalanuvchi ma'lumoti saqlansa)
+      - `attacker-phisher` (bot, redirect, deep link yoki webhook bor bo'lsa)
+      - `attacker-apk` (Android ilova bor bo'lsa)
+      - `attacker-ai` (AI funksiyasi bor bo'lsa)
+   b. Tanlanganlarni shu ustuvorlik tartibida to'p-to'p qil, **har to'pda 3 tadan ko'p emas**:
+      1-to'p: `takeover`, `token`, `outsider` (hisobga kirish va kalit o'g'irlash)
+      2-to'p: `user`, `fraudster`, `deploy` (boshqa odam ma'lumoti, pul, server)
+      3-to'p: `cost`, `supply`, `ai`
+      4-to'p: `apk`, `insider`, `scraper`, `phisher`
+      Bo'sh qolgan joylarni keyingi to'p bilan to'ldirma, shunchaki ketma-ket davom et.
+   c. To'pni ishga tushirishdan oldin vazifalar ro'yxatiga (TaskCreate) har agentni yoz. To'p tugagach darhol natijani `.vibeguard/progress.json` ga yoz (agent nomi, holati `tugadi|yiqildi|o'tkazildi`, topilmalar soni). To'plar orasida foydalanuvchiga bir qator xabar ber ("2/4 to'p tugadi, 7 topilma").
+   d. Har agentga **qisqa va aniq** topshiriq ber: loyiha yo'li, recon xulosasidan faqat shu agentga tegishli qism (fayllar, endpointlar), `rules/` ichidan `agent:` maydoni uning nomiga teng qoidalarni o'qish, natija shakli (JSON massiv, fayl:qator dalili majburiy), "faqat o'qi". Uzun umumiy topshiriq berma, aniqlik pasayadi.
+   e. Agent yiqilsa (ulanish xatosi, to'xtatilgan, bo'sh javob): **bir marta** qayta urin, bu safar yakka o'zi. Yana yiqilsa `progress.json` da `yiqildi` deb belgila, hisobotda "TEKSHIRILMADI" bo'limiga yoz (bu "xavfsiz" degani emas). Qolgan to'plarni to'xtatma.
+   f. `.vibeguard/progress.json` allaqachon bor va to'liq bo'lmasa, foydalanuvchidan so'ra: "Davom ettiramizmi yoki boshidan boshlaymizmi?". Davom ettirsang, faqat `tugadi` bo'lmaganlarini ishlat.
 5. Barcha topilmalarni `redteam-skeptic` agentiga ber. U isbotsizini tashlaydi.
 6. Xotirani yangila: topilmalarni JSON faylga yoz (`.vibeguard/last-run.json`, shakli `${CLAUDE_PLUGIN_ROOT}/skills/vibeguard/reference/scoring-and-memory.md` da) va `python3 "${CLAUDE_PLUGIN_ROOT}/skills/vibeguard/scripts/findings.py" merge .vibeguard/last-run.json` ni ishga tushir. Natijadagi doimiy ID'larni (VG-001...) va "yangi / qolgan / tuzatildi / qayta ochildi" ro'yxatini ishlat. Maqsad butun loyiha bo'lmasa (faqat bir qism), `--partial` qo'sh.
 7. Tasdiqlangan topilmalarni ID'lari bilan `redteam-chain` agentiga ber. Zanjirlar sonini `findings.py merge ... --chains N` bilan qayta yoz yoki birinchi chaqiruvda ber.
